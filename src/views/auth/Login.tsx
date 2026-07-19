@@ -9,8 +9,8 @@ export const Login = () => {
 
     const handleLogin = () => {
         mutation.mutate({
-            userName: 'xiaobai',
-            password: 'mima'
+            account: 'admin',
+            password: 'admin123'
         });
     };
 
@@ -19,7 +19,9 @@ export const Login = () => {
             <button onClick={handleLogin}>登录</button>
             {mutation.isPending && <div>登录中...</div>}
             {mutation.isError && <div>登录失败</div>}
-            {mutation.isSuccess && <div>{JSON.stringify(mutation.data)}</div>}
+            {mutation.isSuccess && (
+                <div>{JSON.stringify(mutation.data.token)}</div>
+            )}
         </div>
     );
 };

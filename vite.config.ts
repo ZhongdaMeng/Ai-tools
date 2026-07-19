@@ -20,13 +20,7 @@ export default defineConfig(({ mode }) => {
             proxy: {
                 [env.VITE_APP_BASE_API]: {
                     target: env.VITE_API_TARGET_URL, // 动态读取后端真实地址
-                    changeOrigin: true, // 跨域必备
-                    // 如果后端接口没有 /api 前缀，需要去掉；如果后端也是 /api/xxx，则不需要 rewrite
-                    rewrite: path =>
-                        path.replace(
-                            new RegExp(`^${env.VITE_APP_BASE_API}`),
-                            ''
-                        )
+                    changeOrigin: true // 跨域必备
                 }
             }
         }

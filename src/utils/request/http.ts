@@ -10,7 +10,7 @@ import { redirect } from 'react-router-dom';
 
 // 创建axios实例，并配置默认参数
 const server: AxiosInstance = axios.create({
-    baseURL: import.meta.env.BASE_URL,
+    baseURL: import.meta.env.VITE_APP_BASE_API,
     timeout: 30000,
     headers: { 'Content-Type': 'application/json' }
 });
@@ -38,8 +38,8 @@ server.interceptors.response.use(
     // 【情况 A】:HTTP 状态码为 2xx，进入这里
     (response: AxiosResponse<ApiResponse>) => {
         const { code, message } = response.data;
-
-        if (code === 200 || code === 0) {
+        // code 200 请求成功
+        if (code === 200) {
             return response;
         }
         // 如果业务状态码是失败的（比如 401, 403, 500 等）

@@ -1,7 +1,7 @@
 import http from '@/utils/request';
 
 export interface LoginParams {
-    userName: string;
+    account: string;
     password: string;
 }
 
@@ -10,5 +10,5 @@ export interface LoginResponse {
 }
 
 export const login = (data: LoginParams) => {
-    return http.post<LoginParams, LoginResponse>('/login', data);
+    return http.post<LoginParams, LoginResponse>('/auth/login', data);
 };
