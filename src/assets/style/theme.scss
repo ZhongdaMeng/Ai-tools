@@ -1,0 +1,99 @@
+// 自定义CSS变量定义（避免与Ant Design冲突）
+:root {
+    // 主题变量前缀：--custom-
+
+    // 主色调（可根据需要扩展）
+    --custom-primary: #1890ff;
+    --custom-primary-light: #40a9ff;
+    --custom-primary-dark: #096dd9;
+
+    // 背景色系统
+    --custom-bg-primary: #ffffff;
+    --custom-bg-secondary: #f5f5f5;
+    --custom-bg-tertiary: #f9f9f9;
+    --custom-bg-overlay: rgba(0, 0, 0, 0.45);
+
+    // 文字颜色系统
+    --custom-text-primary: #000000e0;
+    --custom-text-secondary: #000000a6;
+    --custom-text-tertiary: #00000073;
+    --custom-text-inverse: #ffffff;
+
+    // icon
+    --custom-icon: #7a7a7a;
+    --custom-icon-secondary: #b8b9bb;
+
+    // 边框颜色
+    --custom-border-primary: #d9d9d9;
+    --custom-border-secondary: #f0f0f0;
+
+    // 阴影系统
+    --custom-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.03);
+    --custom-shadow-md: 0 3px 6px -4px rgba(0, 0, 0, 0.06);
+    --custom-shadow-lg: 0 6px 16px 0 rgba(0, 0, 0, 0.08);
+
+    // 间距系统
+    --custom-spacing-xs: 4px;
+    --custom-spacing-sm: 8px;
+    --custom-spacing-md: 16px;
+    --custom-spacing-lg: 24px;
+    --custom-spacing-xl: 32px;
+
+    // 圆角
+    --custom-radius-sm: 2px;
+    --custom-radius-md: 4px;
+    --custom-radius-lg: 8px;
+
+    // 过渡动画
+    --custom-transition-fast: 0.15s ease;
+    --custom-transition-normal: 0.3s ease;
+    --custom-transition-slow: 0.45s ease;
+
+    // 渐变色
+    --custom-linear-background: linear-gradient(
+        to top,
+        #e9fdff 0%,
+        #f9fbfc 50%,
+        #ffffff 100%
+    );
+}
+
+// 暗色主题变量覆盖
+[data-theme='dark'] {
+    // 背景色系统（暗色）
+    --custom-bg-primary: #141414;
+    --custom-bg-secondary: #1f1f1f;
+    --custom-bg-tertiary: #262626;
+    --custom-bg-overlay: rgba(0, 0, 0, 0.65);
+
+    // 文字颜色系统（暗色）
+    --custom-text-primary: #ffffffd9;
+    --custom-text-secondary: #ffffffa6;
+    --custom-text-tertiary: #ffffff73;
+    --custom-text-inverse: #000000;
+
+    // 边框颜色（暗色）
+    --custom-border-primary: #434343;
+    --custom-border-secondary: #303030;
+
+    // 阴影系统（暗色，需要更深）
+    --custom-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.12);
+    --custom-shadow-md: 0 3px 6px -4px rgba(0, 0, 0, 0.24);
+    --custom-shadow-lg: 0 6px 16px 0 rgba(0, 0, 0, 0.32);
+
+    // 主色调（暗色可调整为更亮）
+    --custom-primary: #177ddc;
+    --custom-primary-light: #3c9ae8;
+    --custom-primary-dark: #1260b0;
+}
+
+// 全局过渡动画
+*,
+*::before,
+*::after {
+    transition:
+        background-color var(--custom-transition-normal),
+        color var(--custom-transition-normal),
+        border-color var(--custom-transition-normal),
+        box-shadow var(--custom-transition-normal);
+}

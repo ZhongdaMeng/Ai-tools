@@ -1,0 +1,28 @@
+.siderFooter {
+    width: 100%;
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    box-sizing: border-box;
+
+    z-index: 10;
+    .siderFooter-box {
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        background-color: var(--custom-bg-primary);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px); /* Safari 兼容前缀 */
+        .user-name {
+            margin-left: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--custom-text-primary);
+        }
+    }
+}

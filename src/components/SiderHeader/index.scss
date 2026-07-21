@@ -1,0 +1,54 @@
+.sider-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 1vh;
+    left: 1vh;
+    z-index: 10;
+    border-top-right-radius: 8px;
+
+    .icon-btn {
+        width: 56px;
+        height: 100%;
+        padding: 0 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .icon-btn-box {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            z-index: 111;
+        }
+    }
+
+    .sider-header-btn {
+        width: 84px;
+        height: 40px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        .ant-btn {
+            margin: 0;
+            padding: 0 5px;
+        }
+        .closeSider-icon {
+            font-size: 28px;
+            color: var(--custom-icon);
+        }
+        .addInfo-icon {
+            font-size: 20px;
+            color: var(--custom-icon);
+        }
+    }
+}
+
+.notCollapsed {
+}
+
+.collapsed {
+    background-color: var(--custom-bg-primary);
+    border-radius: 20px;
+    box-shadow: var(--custom-shadow-lg);
+}

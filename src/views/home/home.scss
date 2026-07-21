@@ -1,0 +1,27 @@
+.home-main {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    background-color: var(--custom-bg-primary);
+
+    .home-sider {
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        position: relative;
+        .ant-layout-sider {
+            box-sizing: border-box;
+            min-height: 98vh;
+            border-radius: 8px;
+            background: var(--custom-linear-background);
+            padding-top: 40px;
+            margin: 0 1vh;
+            border: 1px solid var(--custom-border-secondary);
+            box-shadow: var(--custom-shadow-lg);
+        }
+    }
+    .home-content {
+        flex: 1;
+    }
+}

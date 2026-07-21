@@ -1,10 +1,18 @@
 import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import { useUserStore } from '@/store';
 import { login } from '@/api/user';
 import type { LoginParams } from '@/api/user';
 
 export const Login = () => {
+    const navigate = useNavigate();
     const mutation = useMutation({
-        mutationFn: (data: LoginParams) => login(data)
+        mutationFn: (data: LoginParams) => login(data),
+        onSuccess: data => {
+            console.log(data);
+            useUserStore.getState().setToken(data.token);
+            navigate('/');
+        }
     });
 
     const handleLogin = () => {
