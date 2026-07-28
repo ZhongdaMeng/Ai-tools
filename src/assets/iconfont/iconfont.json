@@ -6,6 +6,20 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "3904564",
+      "name": "人工智能",
+      "font_class": "rengongzhineng",
+      "unicode": "e692",
+      "unicode_decimal": 59026
+    },
+    {
+      "icon_id": "47781496",
+      "name": "Gemini",
+      "font_class": "Gemini",
+      "unicode": "e742",
+      "unicode_decimal": 59202
+    },
+    {
       "icon_id": "6683201",
       "name": "搜索",
       "font_class": "sousuo",

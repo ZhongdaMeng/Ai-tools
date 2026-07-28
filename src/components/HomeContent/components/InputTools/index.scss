@@ -1,0 +1,53 @@
+.tools-box {
+    padding: 0 10px 10px 10px;
+    height: 30px;
+    background-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .icon-size {
+        font-size: 16px !important;
+    }
+    .input-tools {
+        display: flex;
+        .ant-btn {
+            padding: 0 8px;
+        }
+        .isActive {
+            color: var(--custom-primary) !important;
+        }
+    }
+    .send-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .auto-btn {
+            padding: 0 10px;
+            margin-right: 5px;
+        }
+        .send-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .sendIcon-size {
+                font-size: 17px !important;
+            }
+        }
+        .can-send {
+            background-color: var(--custom-primary);
+            cursor: pointer;
+            color: var(--custom-text-inverse);
+        }
+        .can-send:hover {
+            background-color: var(--custom-primary-light);
+            color: var(--custom-text-inverse);
+        }
+        .not-send {
+            background-color: var(--custom-primary-disabled);
+            cursor: no-drop;
+        }
+    }
+}

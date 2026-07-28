@@ -1,0 +1,60 @@
+.msg-box {
+    max-width: 1000px;
+    min-width: 300px;
+    height: 100%;
+    padding: 0 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+    overflow: auto;
+    -ms-overflow-style: none; /* IE / Edge 旧版 */
+    scrollbar-width: none; /* Firefox */
+    .msgBox-main::-webkit-scrollbar {
+        display: none;
+    }
+    .msgBox-main {
+        width: 100%;
+
+        display: flex;
+        justify-content: right;
+        flex-wrap: wrap;
+
+        overflow: auto;
+        -ms-overflow-style: none; /* IE / Edge 旧版 */
+        scrollbar-width: none; /* Firefox */
+
+        .userMsg-box {
+            width: 100%;
+            min-height: 30px;
+            display: flex;
+            justify-content: right;
+            margin-top: 20px;
+            .userMsg {
+                width: auto;
+                max-width: 65%;
+                height: auto;
+                font-size: 16px;
+                line-height: 30px;
+                color: var(--custom-text-primary);
+
+                padding: 5px 10px;
+                border-radius: 10px;
+
+                display: flex;
+                justify-content: right;
+
+                background-color: var(--custom-bg-tertiary);
+            }
+        }
+        .model-msg {
+            width: 100%;
+            height: auto;
+            padding: 5px 10px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    }
+}
+
+.msg-box::-webkit-scrollbar {
+    display: none;
+}

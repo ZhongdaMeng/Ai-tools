@@ -9,17 +9,20 @@ const SiderHeader = (props: Props) => {
     const { isCollapsed, clickCloseBtn } = props;
     const radioColor = ['#ff5c5f', '#fac800', '#34c759'];
     return (
-        <div className="sider-header">
+        <div
+            className={`sider-header ${isCollapsed ? 'sider-collapsed' : ''} `}
+        >
             <div className="icon-btn">
                 {radioColor.map(item => (
                     <div
+                        key={item}
                         className="icon-btn-box"
                         style={{ backgroundColor: item }}
                     />
                 ))}
             </div>
             <div
-                className={`sider-header-btn ${isCollapsed ? 'collapsed' : 'notCollapsed'} `}
+                className={`sider-header-btn ${isCollapsed ? 'collapsed' : ''} `}
             >
                 <Button
                     autoInsertSpace={false}

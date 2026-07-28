@@ -37,8 +37,7 @@ Configured in both `vite.config.ts` and `tsconfig.app.json`.
 
 ### State Management
 
-- **Zustand** for client state (`src/store/`)
-- **React Query** (`@tanstack/react-query`) for server state
+- **Zustand** for client state (`src/store/`) 
 - Token stored in Zustand with `persist` middleware (synced to localStorage)
 
 ### Routing

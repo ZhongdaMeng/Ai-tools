@@ -3,7 +3,7 @@
     height: 100vh;
     display: flex;
     background-color: var(--custom-bg-primary);
-
+    position: relative;
     .home-sider {
         height: 100vh;
         display: flex;
@@ -17,8 +17,21 @@
             background: var(--custom-linear-background);
             padding-top: 40px;
             margin: 0 1vh;
-            border: 1px solid var(--custom-border-secondary);
+            overflow: hidden;
+        }
+        .sider-collapsed {
+            margin: 0 0.5vh;
+        }
+        .not-collapsed {
             box-shadow: var(--custom-shadow-lg);
+        }
+        .not-collapsed::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 1px solid var(--custom-border-secondary);
+            border-radius: inherit;
+            pointer-events: none;
         }
     }
     .home-content {

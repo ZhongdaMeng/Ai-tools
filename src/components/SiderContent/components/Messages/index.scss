@@ -1,0 +1,63 @@
+.siderContent-msgBox {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    margin: 10px 0;
+
+    .title {
+        font-size: 16px;
+        padding-left: 10px;
+        margin-bottom: 10px;
+    }
+    .msgList-box {
+        width: 100%;
+        height: auto;
+        box-sizing: border-box;
+
+        overflow: auto;
+        -ms-overflow-style: none; /* IE / Edge 旧版 */
+        scrollbar-width: none; /* Firefox */
+        .msgList-item {
+            width: 100%;
+            height: 40px;
+            border-radius: 6px;
+            padding: 0 10px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            box-sizing: border-box;
+
+            font-size: 14px;
+            color: var(--custom-text-secondary);
+
+            .msgListItem-title {
+                max-width: 80%;
+                white-space: nowrap; /* 2. 强制文本在一行内显示，不换行 */
+                overflow: hidden; /* 3. 隐藏超出容器宽度的内容 */
+                text-overflow: ellipsis; /* 4. 在被截断的位置显示省略号 */
+                cursor: pointer;
+            }
+            .msgListItem-icon {
+                display: flex;
+                justify-content: right;
+                font-size: 16px;
+                color: var(--custom-text-secondary);
+                cursor: pointer;
+            }
+        }
+        .msgList-item-active {
+            font-weight: bold;
+            color: var(--custom-text-primary);
+            background-color: var(--custom-bg-tertiary);
+            .msgListItemIcon-active {
+                font-weight: bold !important;
+                color: var(--custom-text-primary) !important;
+                svg {
+                    fill: var(--custom-text-primary);
+                    font-weight: bold !important;
+                }
+            }
+        }
+    }
+}

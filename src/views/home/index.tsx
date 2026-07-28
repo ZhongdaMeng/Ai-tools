@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { Layout, Menu } from 'antd';
+import { useState, useEffect } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
+import { Layout } from 'antd';
 import SiderHeader from '@/components/SiderHeader/Index';
 import SiderFooter from '@/components/SiderFooter/Index';
 import SiderContent from '@/components/SiderContent/Index';
@@ -9,30 +10,48 @@ import './home.scss';
 const { Sider } = Layout;
 
 export const Home = () => {
+    const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
     const closeSider = () => {
         setCollapsed(!collapsed);
     };
+    const menuClick = (type: string, e: number) => {
+        switch (type) {
+            case 'top':
+                if (e === 1) {
+                    navigate('/note');
+                } else {
+                    navigate(`/chat/newchat`);
+                }
+                break;
+            case 'bottom':
+                navigate(`chat/${e}`);
+                break;
+        }
+    };
+    useEffect(() => {
+        navigate(`/chat/newchat`);
+    }, [navigate]);
     return (
         <div className="home-main">
+            <SiderHeader clickCloseBtn={closeSider} isCollapsed={collapsed} />
             <div className="home-sider">
-                <SiderHeader
-                    clickCloseBtn={closeSider}
-                    isCollapsed={collapsed}
-                />
                 <Sider
                     trigger={null}
                     collapsible
                     collapsed={collapsed}
                     width="230"
                     collapsedWidth="0"
+                    className={collapsed ? 'sider-collapsed' : 'not-collapsed'}
                 >
-                    <SiderContent />
-                    <Menu />
-                    <SiderFooter />
+                    <SiderContent menuClick={menuClick} />
+                    <SiderFooter collapsed={collapsed} />
                 </Sider>
             </div>
-            <div className="home-content">{/* <ThemeToggle /> */}</div>
+            <div className="home-content">
+                <Outlet context={{ isCollapsed: collapsed }} />
+                {/* <ThemeToggle /> */}
+            </div>
         </div>
     );
 };

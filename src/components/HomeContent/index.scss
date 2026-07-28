@@ -1,0 +1,69 @@
+.homeContent {
+    width: 100%;
+    height: 100%;
+    background-color: var(--custom-bg-primary);
+    padding: 1vh 1vh 0 0;
+    box-sizing: border-box;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .content-header {
+        position: absolute;
+        top: 1vh;
+        min-width: 80px;
+        height: 40px;
+
+        padding: 0 10px;
+        box-sizing: border-box;
+
+        border-radius: 20px;
+        box-shadow: var(--custom-shadow-lg);
+
+        background-color: var(--glass-morphism);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px); /* Safari 兼容前缀 */
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        cursor: pointer;
+        z-index: 111;
+    }
+    .collapsed {
+        left: calc(2vh + 160px);
+    }
+    .not-collapsed {
+        left: 1vh;
+    }
+    .content-box {
+        width: 100%;
+        height: 99vh;
+        max-width: 1000px;
+        min-width: 300px;
+        overflow: hidden;
+        border-radius: 20px;
+        position: relative;
+        box-sizing: border-box;
+        .content-input {
+            position: absolute;
+            left: 0;
+            bottom: 1vh;
+            width: 100%;
+            height: auto;
+            background: var(--custom-linear-background);
+            box-shadow: var(--custom-shadow-lg);
+            border: 1px solid var(--custom-border-secondary);
+            border-radius: 20px;
+
+            .input-box {
+                padding: 10px 10px 0 10px;
+                .text-area {
+                    border: none;
+                    background-color: transparent;
+                }
+            }
+        }
+    }
+}

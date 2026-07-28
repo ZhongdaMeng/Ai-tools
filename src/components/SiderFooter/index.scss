@@ -12,17 +12,89 @@
         box-sizing: border-box;
         display: flex;
         align-items: center;
-        padding-left: 20px;
         border-bottom-right-radius: 8px;
         border-bottom-left-radius: 8px;
         background-color: var(--custom-bg-primary);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px); /* Safari 兼容前缀 */
-        .user-name {
-            margin-left: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--custom-text-primary);
+        .siderFooter-loginbox {
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            .user-name {
+                margin-left: 10px;
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--custom-text-primary);
+            }
         }
+    }
+}
+
+.not-login {
+    height: 110px !important;
+
+    .login-box {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 10px;
+        box-sizing: border-box;
+        .login-info {
+            .info-title {
+                font-size: 16px;
+                color: var(--custom-text-primary);
+            }
+            .info-text {
+                font-size: 14px;
+                color: var(--custom-text-secondary);
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+
+.hidden-style {
+    display: none;
+}
+
+.login-model {
+    width: 390px !important;
+    border-radius: 20px !important;
+    .ant-modal-close-x {
+        color: var(--custom-text-primary);
+    }
+    .ant-modal-title {
+        text-align: center;
+        font-size: 28px;
+    }
+    .login-model-content {
+        text-align: center;
+        font-size: 16px;
+        color: var(--custom-text-primary);
+        margin-bottom: 20px;
+    }
+    .login-form {
+        padding-bottom: 10px;
+        .login-input {
+            margin-bottom: 10px;
+            width: 100%;
+            height: 46px;
+            border-radius: 23px;
+        }
+        .login-input::placeholder {
+            font-size: 18px;
+        }
+        .login-model-btn {
+            height: 46px;
+            border-radius: 23px;
+            background-color: black;
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 500;
+        }
+    }
+    .ant-form-item-explain-error {
+        padding-left: 10px;
     }
 }

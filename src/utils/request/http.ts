@@ -6,7 +6,7 @@ import type {
 } from 'axios';
 import type { ApiResponse } from '@/types/response';
 import { useUserStore } from '@/store';
-import { redirect } from 'react-router-dom';
+// import { redirect } from 'react-router-dom';
 
 // 创建axios实例，并配置默认参数
 const server: AxiosInstance = axios.create({
@@ -54,16 +54,19 @@ server.interceptors.response.use(
         // 统一处理 HTTP 状态码错误
         if (error.response) {
             // 服务器返回了错误状态码，我们可以拿到 error.response.data
-            const { code, message } = error.response.data || {};
+            const { statusCode, message } = error.response.data || {};
             // 同样调用统一的业务错误处理函数
-            handleBusinessError(code, message || '服务器异常，请稍后重试');
+            handleBusinessError(
+                statusCode,
+                message || '服务器异常，请稍后重试'
+            );
         } else {
             // 请求已发出但未收到响应（如断网、超时）
             console.error('网络错误，无法连接到服务器');
         }
 
         // 将错误继续抛出，以便在组件的 catch 中进行单独的业务处理
-        return Promise.reject(error);
+        return Promise.reject(error.response.data);
     }
 );
 
@@ -75,16 +78,16 @@ const handleBusinessError = (code: number, message: string) => {
             // 清除Token
             localStorage.removeItem('token');
             useUserStore.getState().removeToken();
-            redirect('/login');
+            // redirect('/login');
             break;
         case 403:
-            alert('权限不足，拒绝访问');
+            // alert('登录失败');
             break;
         case 404:
-            alert('请求的资源不存在');
+            // alert('请求的资源不存在');
             break;
         case 500:
-            alert('服务器内部错误');
+            // alert('服务器内部错误');
             break;
         default:
             // 其他业务错误，直接弹出后端返回的 message
