@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "6265099",
+      "name": "简历",
+      "font_class": "resume-line",
+      "unicode": "e64a",
+      "unicode_decimal": 58954
+    },
+    {
+      "icon_id": "12400912",
+      "name": "暗色",
+      "font_class": "anse",
+      "unicode": "e6cb",
+      "unicode_decimal": 59083
+    },
+    {
+      "icon_id": "15711148",
+      "name": "系统",
+      "font_class": "xitong",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    },
+    {
+      "icon_id": "21935047",
+      "name": "白色主题",
+      "font_class": "baisezhuti",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
       "icon_id": "3904564",
       "name": "人工智能",
       "font_class": "rengongzhineng",

@@ -1,13 +1,21 @@
-import { useRef, useEffect, useState, useMemo } from 'react';
+import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { message } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
-import { getMsgList } from '@/api/ai';
+import { message, Input, Dropdown, Modal } from 'antd';
+import type { MenuProps } from 'antd';
+import { EllipsisOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { getMsgList, renameConversation, deleteConversation } from '@/api/ai';
 import type { GetMsgListParams, GetMsgListItem } from '@/api/ai';
 import { useConversationStore } from '@/store';
 import './index.scss';
 
-const Messages = () => {
+interface Props {
+    searchResults: GetMsgListItem[] | null;
+    searchTotal: number;
+    searchLoading: boolean;
+    onLoadMoreSearch: () => void;
+}
+
+const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch }: Props) => {
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
@@ -22,9 +30,23 @@ const Messages = () => {
     const [total, setTotal] = useState<number>(0);
     const [msgList, setMsgList] = useState<GetMsgListItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const hasNextPage = msgList.length < total;
 
+    // 是否处于搜索模式
+    const isSearching = searchResults !== null;
+    const hasNextPage = isSearching
+        ? searchResults.length < searchTotal
+        : msgList.length < total;
+    const isLoading = isSearching ? searchLoading : loading;
+
+    // 正在重命名的会话 id
+    const [editingId, setEditingId] = useState<string | null>(null);
+    const [editTitle, setEditTitle] = useState('');
+    const inputRef = useRef<HTMLInputElement | null>(null);
+
+    // 普通列表加载
     useEffect(() => {
+        if (isSearching) return;
+
         getMsgList(params)
             .then(res => {
                 setMsgList(pre => {
@@ -41,7 +63,6 @@ const Messages = () => {
                 });
                 setTotal(res.total);
 
-                // 后端已返回的乐观会话，清理掉
                 const loadedIds = new Set(res.list.map(item => Number(item.id)));
                 for (const conversation of optimisticConversations) {
                     if (loadedIds.has(conversation.id)) {
@@ -56,10 +77,12 @@ const Messages = () => {
                 });
             })
             .finally(() => setLoading(false));
-    }, [params, messageApi]);
+    }, [params, messageApi, isSearching]);
 
-    // 渲染时合并乐观会话，避免在 useEffect 中同步 setState
+    // 渲染列表
     const displayList = useMemo(() => {
+        if (isSearching) return searchResults;
+
         const existingIds = new Set(msgList.map(item => Number(item.id)));
         const optimisticItems: GetMsgListItem[] = [];
 
@@ -75,64 +98,164 @@ const Messages = () => {
         }
 
         return optimisticItems.length > 0 ? [...optimisticItems, ...msgList] : msgList;
-    }, [msgList, optimisticConversations]);
+    }, [msgList, optimisticConversations, isSearching, searchResults]);
 
+    // 无限滚动：普通列表和搜索结果共用同一个哨兵
     useEffect(() => {
         const node = loadMoreRef.current;
-        if (!node || !hasNextPage) return;
+        if (!node || !hasNextPage || isLoading) return;
 
         const observer = new IntersectionObserver(
             entries => {
-                if (entries[0]?.isIntersecting && !loading && hasNextPage) {
-                    setParams(pre => ({ ...pre, page: pre.page + 1 }));
+                if (entries[0]?.isIntersecting && hasNextPage && !isLoading) {
+                    if (isSearching) {
+                        onLoadMoreSearch();
+                    } else {
+                        setParams(pre => ({ ...pre, page: pre.page + 1 }));
+                    }
                 }
             },
-            {
-                rootMargin: '200px 0px'
-            }
+            { rootMargin: '200px 0px' }
         );
 
         observer.observe(node);
         return () => observer.disconnect();
-    }, [loading, hasNextPage]);
+    }, [isLoading, hasNextPage, isSearching, onLoadMoreSearch]);
 
     const handleClickMsg = (id: string) => {
+        if (editingId === id) return;
         setSelectedId(Number(id));
         navigate(`/chat/${id}`);
     };
 
+    const handleStartRename = useCallback((item: GetMsgListItem) => {
+        setEditingId(item.id);
+        setEditTitle(item.title);
+        setTimeout(() => inputRef.current?.focus(), 0);
+    }, []);
+
+    const handleRenameConfirm = useCallback(
+        (id: string, originalTitle: string) => {
+            const title = editTitle.trim();
+            setEditingId(null);
+            if (!title || title === originalTitle) return;
+            renameConversation(Number(id), title)
+                .then(() => {
+                    setMsgList(pre =>
+                        pre.map(item => (item.id === id ? { ...item, title } : item))
+                    );
+                })
+                .catch((err: unknown) => {
+                    const msg = err instanceof Error ? err.message : '重命名失败';
+                    messageApi.open({ type: 'error', content: msg });
+                });
+        },
+        [editTitle, messageApi]
+    );
+
+    const handleDelete = useCallback(
+        (id: string) => {
+            Modal.confirm({
+                className: 'macos-modal',
+                title: '确认删除',
+                content: '删除后无法恢复，确认删除该会话？',
+                okText: '删除',
+                cancelText: '取消',
+                okButtonProps: { danger: true },
+                centered: true,
+                onOk: async () => {
+                    try {
+                        await deleteConversation(Number(id));
+                        setMsgList(pre => pre.filter(item => item.id !== id));
+                        if (selectedId === Number(id)) {
+                            setSelectedId(null);
+                            navigate('/chat/newchat');
+                        }
+                    } catch (err: unknown) {
+                        const msg = err instanceof Error ? err.message : '删除失败';
+                        messageApi.open({ type: 'error', content: msg });
+                    }
+                }
+            });
+        },
+        [selectedId, setSelectedId, navigate, messageApi]
+    );
+
+    const getMenuItems = useCallback(
+        (item: GetMsgListItem): MenuProps['items'] => [
+            {
+                key: 'rename',
+                label: '重命名',
+                icon: <EditOutlined />,
+                onClick: () => handleStartRename(item)
+            },
+            { type: 'divider' },
+            {
+                key: 'delete',
+                label: '删除',
+                icon: <DeleteOutlined />,
+                danger: true,
+                onClick: () => handleDelete(item.id)
+            }
+        ],
+        [handleStartRename, handleDelete]
+    );
+
     return (
         <div className="siderContent-msgBox">
-            <div className="title">最近</div>
+            {!isSearching && <div className="title">最近</div>}
 
             {displayList.length > 0 ? (
                 <div className="msgList-box">
                     {displayList.map(item => {
+                        const isEditing = editingId === item.id;
                         return (
                             <div
                                 key={item.id}
                                 className={`msgList-item ${selectedId === Number(item.id) ? 'msgList-item-active' : ''}`}
                             >
-                                <div
-                                    className="msgListItem-title"
-                                    onClick={() => handleClickMsg(item.id)}
-                                >
-                                    {item.title}
-                                </div>
-                                <div className="msgListItem-icon">
-                                    <EllipsisOutlined
-                                        className={`msgListItem-icon ${selectedId === Number(item.id) ? 'msgListItemIcon-active' : ''}`}
+                                {isEditing ? (
+                                    <Input
+                                        ref={inputRef as never}
+                                        className="input-style msgListItem-editInput"
+                                        size="small"
+                                        value={editTitle}
+                                        onChange={e => setEditTitle(e.target.value)}
+                                        onPressEnter={() => handleRenameConfirm(item.id, item.title)}
+                                        onBlur={() => handleRenameConfirm(item.id, item.title)}
                                     />
-                                </div>
+                                ) : (
+                                    <div
+                                        className="msgListItem-title"
+                                        onClick={() => handleClickMsg(item.id)}
+                                    >
+                                        {item.title}
+                                    </div>
+                                )}
+                                {!isEditing && (
+                                    <Dropdown
+                                        menu={{ items: getMenuItems(item) }}
+                                        trigger={['click']}
+                                        placement="bottomRight"
+                                    >
+                                        <div className="msgListItem-icon">
+                                            <EllipsisOutlined
+                                                className={`${selectedId === Number(item.id) ? 'msgListItemIcon-active' : ''}`}
+                                            />
+                                        </div>
+                                    </Dropdown>
+                                )}
                             </div>
                         );
                     })}
                 </div>
-            ) : null}
-            {/* 哨兵元素：列表底部 */}
+            ) : (
+                isSearching && <div className="search-empty">无匹配结果</div>
+            )}
+            {/* 哨兵元素：搜索和普通列表共用 */}
             {hasNextPage && (
                 <div ref={loadMoreRef} className="load-more-sentinel">
-                    {loading ? '正在加载更多...' : ''}
+                    {isLoading ? '正在加载更多...' : ''}
                 </div>
             )}
             {contextHolder}

@@ -1,7 +1,7 @@
 import { useThemeStore } from '@/store/useTheme';
 import type { ThemeMode } from '@/store/useTheme';
-import { Button, Dropdown } from 'antd';
-import { SunOutlined, MoonOutlined, DesktopOutlined } from '@ant-design/icons';
+import { Dropdown } from 'antd';
+import './index.scss'
 
 const ThemeToggle = () => {
     const { theme, setTheme } = useThemeStore();
@@ -9,17 +9,17 @@ const ThemeToggle = () => {
     const items = [
         {
             key: 'light',
-            icon: <SunOutlined />,
+            icon: <i className="iconfont icon-baisezhuti"></i>,
             label: '亮色模式'
         },
         {
             key: 'dark',
-            icon: <MoonOutlined />,
+            icon: <i className="iconfont icon-anse"></i>,
             label: '暗色模式'
         },
         {
             key: 'system',
-            icon: <DesktopOutlined />,
+            icon: <i className="iconfont icon-xitong"></i>,
             label: '跟随系统'
         }
     ];
@@ -27,13 +27,13 @@ const ThemeToggle = () => {
     const getCurrentIcon = () => {
         switch (theme) {
             case 'light':
-                return <SunOutlined />;
+                return 'icon-baisezhuti';
             case 'dark':
-                return <MoonOutlined />;
+                return 'icon-anse';
             case 'system':
-                return <DesktopOutlined />;
+                return 'icon-xitong';
             default:
-                return <SunOutlined />;
+                return 'icon-baisezhuti';
         }
     };
 
@@ -46,7 +46,7 @@ const ThemeToggle = () => {
             }}
             trigger={['click']}
         >
-            <Button type="text" icon={getCurrentIcon()} />
+            <i className={`iconfont ${getCurrentIcon()}`}></i>
         </Dropdown>
     );
 };

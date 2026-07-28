@@ -42,6 +42,30 @@ export const getMsgDetail = (id: string) => {
     return http.get<GetMsgDetailResponse[]>(`/ai/conversations/${id}/messages`);
 };
 
+// 重命名会话
+export const renameConversation = (id: number, title: string) => {
+    return http.patch<unknown, unknown>(`/ai/conversations/${id}/title`, { title });
+};
+
+// 删除会话
+export const deleteConversation = (id: number) => {
+    return http.delete<unknown>(`/ai/conversations/${id}`);
+};
+
+// 搜索会话
+export interface SearchConversationsParams {
+    keyword: string;
+    page: number;
+    pageSize: number;
+}
+
+export const searchConversations = (params: SearchConversationsParams) => {
+    return http.get<GetMsgListResponse, SearchConversationsParams>(
+        '/ai/conversations/search',
+        params
+    );
+};
+
 // SSE流式聊天API
 export interface StreamChatCallbacks {
     onChunk: (chunk: string) => void;

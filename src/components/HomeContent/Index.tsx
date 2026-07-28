@@ -8,6 +8,7 @@ import { useModelStore } from '@/store/useModel.ts';
 import InputBox from './components/InputBox/Index.tsx';
 import InputTools from './components/InputTools/Index.tsx';
 import MsgBox from './components/MsgBox/Index.tsx';
+// import ThemeToggle from '@/components/ThemeToggle/Index.tsx';
 import './index.scss';
 
 interface ContextType {
@@ -15,7 +16,7 @@ interface ContextType {
     onConversationCreated?: (conversationId: string, firstUserContent?: string) => void;
 }
 export const HomeContent = () => {
-    const { isCollapsed, onConversationCreated } = useOutletContext<ContextType>();
+    const { onConversationCreated } = useOutletContext<ContextType>();
     const { id } = useParams();
     const token = useUserStore(state => state.token);
     const model = useModelStore(state => state.model);
@@ -25,7 +26,7 @@ export const HomeContent = () => {
     const [inputInfo, setInputInfo] = useState<string>('');
     const [msgList, setMsgList] = useState<GetMsgDetailResponse[]>([]);
     const [currentConversationId, setCurrentConversationId] = useState<string | undefined>(id);
-    
+
     // 流式输出状态
     const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
     const [streamingContent, setStreamingContent] = useState<string>('');
@@ -34,10 +35,10 @@ export const HomeContent = () => {
 
     const sendMsg = async () => {
         if (!inputInfo.trim() || isStreaming) return;
-        
+
         const messageContent = inputInfo;
         setInputInfo('');
-        
+
         const userMessage: GetMsgDetailResponse = {
             id: `user-${Date.now()}`,
             conversationId: currentConversationId || 'newchat',
@@ -47,7 +48,7 @@ export const HomeContent = () => {
             provider: null,
             createdAt: new Date().toISOString()
         };
-        
+
         const aiMessageId = `ai-${Date.now()}`;
         const aiMessage: GetMsgDetailResponse = {
             id: aiMessageId,
@@ -58,15 +59,15 @@ export const HomeContent = () => {
             provider: null,
             createdAt: new Date().toISOString()
         };
-        
+
         // 添加用户消息和AI消息占位
         setMsgList(prev => [...prev, userMessage, aiMessage]);
-        
+
         // 开始流式输出
         setIsStreaming(true);
         setStreamingMessageId(aiMessageId);
         setStreamingContent('');
-        
+
         try {
             // 调用真正的SSE流式API
             const cancelStream = await streamChat(
@@ -79,9 +80,9 @@ export const HomeContent = () => {
                     },
                     onComplete: (fullContent) => {
                         // 流式完成，更新消息内容
-                        setMsgList(prev => 
-                            prev.map(msg => 
-                                msg.id === aiMessageId 
+                        setMsgList(prev =>
+                            prev.map(msg =>
+                                msg.id === aiMessageId
                                     ? { ...msg, content: fullContent }
                                     : msg
                             )
@@ -109,9 +110,9 @@ export const HomeContent = () => {
                     onError: (error) => {
                         console.error('流式输出错误:', error);
                         // 更新AI消息为错误提示
-                        setMsgList(prev => 
-                            prev.map(msg => 
-                                msg.id === aiMessageId 
+                        setMsgList(prev =>
+                            prev.map(msg =>
+                                msg.id === aiMessageId
                                     ? { ...msg, content: `错误: ${error.message}` }
                                     : msg
                             )
@@ -123,7 +124,7 @@ export const HomeContent = () => {
                 },
                 currentConversationId
             );
-            
+
             cancelStreamRef.current = cancelStream;
         } catch (error) {
             console.error('发送消息失败:', error);
@@ -188,18 +189,18 @@ export const HomeContent = () => {
 
     return (
         <div className="homeContent">
-            <div
+            {/* <div
                 className={`content-header ${isCollapsed ? 'collapsed' : 'not-collapsed'}`}
             >
-                Model
-            </div>
+                <ThemeToggle />
+            </div> */}
             <div
                 className="content-box"
                 style={{ paddingBottom: `${inputBoxHeight + 20}px` }}
             >
                 {msgList.length > 0 && (
-                    <MsgBox 
-                        msgList={msgList} 
+                    <MsgBox
+                        msgList={msgList}
                         streamingMessageId={streamingMessageId}
                         streamingContent={streamingContent}
                         isStreaming={isStreaming}

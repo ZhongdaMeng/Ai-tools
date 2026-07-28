@@ -26,10 +26,10 @@ const routes: RouteObject[] = [
                 // loader: msgLoader
             },
             {
-                path: '/note',
+                path: '/resume',
                 lazy: async () => {
-                    const { Note } = await import('@/components/Note/Index');
-                    return { Component: Note };
+                    const { Resume } = await import('@/components/Resume/Index');
+                    return { Component: Resume };
                 }
             }
         ]

@@ -5,7 +5,6 @@ import SiderHeader from '@/components/SiderHeader/Index';
 import SiderFooter from '@/components/SiderFooter/Index';
 import SiderContent from '@/components/SiderContent/Index';
 import { useConversationStore } from '@/store';
-// import ThemeToggle from '@/components/ThemeToggle/Index';
 import './home.scss';
 
 const { Sider } = Layout;
@@ -21,7 +20,7 @@ export const Home = () => {
         switch (type) {
             case 'top':
                 if (e === 1) {
-                    navigate('/note');
+                    navigate('/resume');
                 } else {
                     conversationStore.setSelectedId(null);
                     navigate(`/chat/newchat`);
@@ -55,7 +54,14 @@ export const Home = () => {
     }, [navigate]);
     return (
         <div className="home-main">
-            <SiderHeader clickCloseBtn={closeSider} isCollapsed={collapsed} />
+            <SiderHeader
+                clickCloseBtn={closeSider}
+                isCollapsed={collapsed}
+                onNewChat={() => {
+                    conversationStore.setSelectedId(null);
+                    navigate('/chat/newchat');
+                }}
+            />
             <div className="home-sider">
                 <Sider
                     trigger={null}
@@ -71,7 +77,6 @@ export const Home = () => {
             </div>
             <div className="home-content">
                 <Outlet context={{ isCollapsed: collapsed, onConversationCreated }} />
-                {/* <ThemeToggle /> */}
             </div>
         </div>
     );

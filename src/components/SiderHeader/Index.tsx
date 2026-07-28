@@ -4,9 +4,10 @@ import './index.scss';
 interface Props {
     isCollapsed: boolean;
     clickCloseBtn: () => void;
+    onNewChat: () => void;
 }
 const SiderHeader = (props: Props) => {
-    const { isCollapsed, clickCloseBtn } = props;
+    const { isCollapsed, clickCloseBtn, onNewChat } = props;
     const radioColor = ['#ff5c5f', '#fac800', '#34c759'];
     return (
         <div
@@ -33,7 +34,7 @@ const SiderHeader = (props: Props) => {
                 >
                     <i className="iconfont icon-icon_cebianlan closeSider-icon"></i>
                 </Button>
-                <Button autoInsertSpace={false} type="text">
+                <Button autoInsertSpace={false} type="text" onClick={onNewChat}>
                     <i className="iconfont icon-bianji addInfo-icon"></i>
                 </Button>
             </div>

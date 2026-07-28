@@ -48,10 +48,21 @@ const del = async <TResponse, TParams = unknown>(
     return res.data.data;
 };
 
+// 包装 patch 方法
+const patch = async <TRequest, TResponse>(
+    url: string,
+    data?: TRequest,
+    config?: AxiosRequestConfig
+): Promise<TResponse> => {
+    const res = await server.patch<ApiResponse<TResponse>>(url, data, config);
+    return res.data.data;
+};
+
 const http = {
     get,
     post,
     put,
+    patch,
     delete: del
 } as const;
 
