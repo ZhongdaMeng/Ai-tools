@@ -1,8 +1,12 @@
 .siderContent {
     width: 100%;
-    height: 40px;
+    flex: 1;
+    min-height: 0;
     box-sizing: border-box;
     padding: 5px 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
     .search-icon {
         color: var(--custom-icon-secondary);
         font-weight: 800;

@@ -10,11 +10,22 @@
     }
     .input-tools {
         display: flex;
+        align-items: center;
         .ant-btn {
             padding: 0 8px;
         }
         .isActive {
             color: var(--custom-primary) !important;
+        }
+        .model-select-btn {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 12px;
+            color: var(--custom-text-secondary);
+            &:hover {
+                color: var(--custom-text-primary);
+            }
         }
     }
     .send-box {

@@ -1,8 +1,13 @@
 .siderContent-msgBox {
     width: 100%;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     box-sizing: border-box;
     margin: 10px 0;
+    padding-bottom: 40px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 
     .title {
         font-size: 16px;
@@ -11,10 +16,11 @@
     }
     .msgList-box {
         width: 100%;
-        height: auto;
+        flex: 1;
+        min-height: 0;
         box-sizing: border-box;
 
-        overflow: auto;
+        overflow-y: auto;
         -ms-overflow-style: none; /* IE / Edge 旧版 */
         scrollbar-width: none; /* Firefox */
         .msgList-item {

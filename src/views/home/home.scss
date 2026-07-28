@@ -12,12 +12,21 @@
         position: relative;
         .ant-layout-sider {
             box-sizing: border-box;
-            min-height: 98vh;
+            height: 98vh;
             border-radius: 8px;
             background: var(--custom-linear-background);
             padding-top: 40px;
             margin: 0 1vh;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            .ant-layout-sider-children {
+                flex: 1;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
         }
         .sider-collapsed {
             margin: 0 0.5vh;

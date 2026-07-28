@@ -1,13 +1,31 @@
 import { useState, useMemo } from 'react';
 import { useModelStore } from '@/store/index';
-import { Button } from 'antd';
+import { Button, Dropdown } from 'antd';
+import type { MenuProps } from 'antd';
 import {
     PlusOutlined,
     GlobalOutlined,
     AudioOutlined,
-    ArrowUpOutlined
+    ArrowUpOutlined,
+    DownOutlined
 } from '@ant-design/icons';
 import './index.scss';
+
+// 支持的模型列表
+const MODEL_OPTIONS: MenuProps['items'] = [
+    {
+        key: 'Gemma 4',
+        label: 'Gemma 4 (Uncensored)',
+    },
+    {
+        key: 'mimo-v2.5-pro',
+        label: 'MiMo-V2.5-Pro',
+    },
+    {
+        key: 'mimo-v2.5',
+        label: 'MiMo-V2.5',
+    },
+];
 
 interface PropsType {
     canSend: boolean;
@@ -16,7 +34,7 @@ interface PropsType {
 
 const InputTools = (props: PropsType) => {
     const { canSend, inputToolsClick } = props;
-    const { model, setUseInterNet } = useModelStore();
+    const { model, setModel, setUseInterNet } = useModelStore();
 
     const [activeGOl, setAactiveGOl] = useState<boolean>(false);
     const disabledGOl = useMemo(() => {
@@ -25,6 +43,11 @@ const InputTools = (props: PropsType) => {
     const disabledSend = useMemo(() => {
         return !canSend;
     }, [canSend]);
+
+    // 模型选择
+    const handleModelSelect: MenuProps['onClick'] = ({ key }) => {
+        setModel(key);
+    };
 
     const btnClick = (type: number) => {
         switch (type) {
@@ -37,7 +60,7 @@ const InputTools = (props: PropsType) => {
                 setUseInterNet(!activeGOl);
                 break;
             case 2:
-                console.log('模型选择', type);
+                // 模型选择通过Dropdown处理
                 break;
             case 3:
                 console.log('语音', type);
@@ -72,13 +95,23 @@ const InputTools = (props: PropsType) => {
                         className={`icon-size ${activeGOl ? 'isActive' : ''}`}
                     />
                 </Button>
-                <Button
-                    autoInsertSpace={false}
-                    type="text"
-                    onClick={() => btnClick(2)}
+                <Dropdown
+                    menu={{
+                        items: MODEL_OPTIONS,
+                        onClick: handleModelSelect,
+                        selectedKeys: [model],
+                    }}
+                    trigger={['click']}
                 >
-                    <span className="icon-size">Auto</span>
-                </Button>
+                    <Button
+                        autoInsertSpace={false}
+                        type="text"
+                        className="model-select-btn"
+                    >
+                        <span className="icon-size">{model || 'Auto'}</span>
+                        <DownOutlined style={{ fontSize: '10px', marginLeft: '4px' }} />
+                    </Button>
+                </Dropdown>
             </div>
             <div className="send-box">
                 <Button
@@ -86,6 +119,7 @@ const InputTools = (props: PropsType) => {
                     type="text"
                     onClick={() => btnClick(3)}
                     className="auto-btn"
+                    disabled
                 >
                     <AudioOutlined className="icon-size" />
                 </Button>
