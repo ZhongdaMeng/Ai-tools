@@ -91,7 +91,7 @@ const handleBusinessError = (code: number, message: string) => {
             break;
         default:
             // 其他业务错误，直接弹出后端返回的 message
-            alert(message || '操作失败');
+            console.error(message || '操作失败');
             break;
     }
 };

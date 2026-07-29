@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useOutletContext, useParams } from 'react-router-dom';
+import { message } from 'antd';
 import { getMsgDetail, streamChat } from '@/api/ai.ts';
 import type { GetMsgDetailResponse } from '@/api/ai.ts';
 import { useUserStore } from '@/store/useUser.ts';
@@ -35,6 +36,10 @@ export const HomeContent = () => {
 
     const sendMsg = async () => {
         if (!inputInfo.trim() || isStreaming) return;
+        if (!token) {
+            message.warning('请先登录');
+            return;
+        }
 
         const messageContent = inputInfo;
         setInputInfo('');

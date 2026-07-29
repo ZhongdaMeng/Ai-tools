@@ -5,7 +5,7 @@ import type { MenuProps } from 'antd';
 import { EllipsisOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getMsgList, renameConversation, deleteConversation } from '@/api/ai';
 import type { GetMsgListParams, GetMsgListItem } from '@/api/ai';
-import { useConversationStore } from '@/store';
+import { useConversationStore, useUserStore } from '@/store';
 import './index.scss';
 
 interface Props {
@@ -19,6 +19,7 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
+    const token = useUserStore(state => state.token);
     const selectedId = useConversationStore(state => state.selectedId);
     const setSelectedId = useConversationStore(state => state.setSelectedId);
     const optimisticConversations = useConversationStore(state => state.optimisticConversations);
@@ -43,9 +44,17 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
     const [editTitle, setEditTitle] = useState('');
     const inputRef = useRef<HTMLInputElement | null>(null);
 
+    // token 变化时重置列表（登录后重新拉取，退出后清空）
+    useEffect(() => {
+        setMsgList([]);
+        setTotal(0);
+        setParams({ page: 1, pageSize: 20 });
+        setLoading(!!token);
+    }, [token]);
+
     // 普通列表加载
     useEffect(() => {
-        if (isSearching) return;
+        if (isSearching || !token) return;
 
         getMsgList(params)
             .then(res => {
@@ -203,7 +212,9 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
 
     return (
         <div className="siderContent-msgBox">
-            {!isSearching && <div className="title">最近</div>}
+            {!isSearching && token && displayList.length > 0 && (
+                <div className="title">最近</div>
+            )}
 
             {displayList.length > 0 ? (
                 <div className="msgList-box">

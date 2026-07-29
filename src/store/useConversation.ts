@@ -12,6 +12,7 @@ interface ConversationState {
     setSelectedId: (id: number | null) => void;
     prependOptimistic: (conversation: OptimisticConversation) => void;
     removeOptimisticId: (id: number) => void;
+    reset: () => void;
 }
 
 export const useConversationStore = create<ConversationState>()(
@@ -41,6 +42,9 @@ export const useConversationStore = create<ConversationState>()(
                     item => item.id !== id
                 )
             }));
+        },
+        reset: () => {
+            set({ selectedId: null, optimisticConversations: [] });
         }
     })
 );
