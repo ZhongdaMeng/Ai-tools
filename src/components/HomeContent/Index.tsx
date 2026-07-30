@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { useOutletContext, useParams } from 'react-router-dom';
+import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { getMsgDetail, streamChat } from '@/api/ai.ts';
 import type { GetMsgDetailResponse } from '@/api/ai.ts';
@@ -18,6 +18,7 @@ interface ContextType {
 }
 export const HomeContent = () => {
     const { onConversationCreated } = useOutletContext<ContextType>();
+    const navigate = useNavigate();
     const { id } = useParams();
     const token = useUserStore(state => state.token);
     const model = useModelStore(state => state.model);
@@ -27,6 +28,7 @@ export const HomeContent = () => {
     const [inputInfo, setInputInfo] = useState<string>('');
     const [msgList, setMsgList] = useState<GetMsgDetailResponse[]>([]);
     const [currentConversationId, setCurrentConversationId] = useState<string | undefined>(id);
+    const currentConversationIdRef = useRef<string | undefined>(id === 'newchat' ? undefined : id);
 
     // 流式输出状态
     const [streamingMessageId, setStreamingMessageId] = useState<string | null>(null);
@@ -95,10 +97,16 @@ export const HomeContent = () => {
                         setIsStreaming(false);
                         setStreamingMessageId(null);
                         setStreamingContent('');
+                        // 流式完成后导航到新会话（如果当前处于 newchat）
+                        const latestId = currentConversationIdRef.current;
+                        if (latestId && id === 'newchat') {
+                            navigate(`/chat/${latestId}`, { replace: true });
+                        }
                     },
                     onConversationId: (conversationId) => {
                         // 保存会话ID
                         setCurrentConversationId(conversationId);
+                        currentConversationIdRef.current = conversationId;
                         // 更新用户消息和AI消息的conversationId
                         setMsgList(prev =>
                             prev.map(msg =>
@@ -141,6 +149,13 @@ export const HomeContent = () => {
 
     // 当 id 变化时，重置所有会话状态并按需拉取新会话
     useEffect(() => {
+        const newConversationId = id === 'newchat' ? undefined : id;
+
+        // 流式完成后导航到同一会话时，跳过重置，避免闪烁
+        if (newConversationId && newConversationId === currentConversationIdRef.current) {
+            return;
+        }
+
         // 取消进行中的流式输出
         if (cancelStreamRef.current) {
             cancelStreamRef.current();
@@ -149,7 +164,8 @@ export const HomeContent = () => {
 
         // 重置会话相关状态
         setMsgList([]);
-        setCurrentConversationId(id === 'newchat' ? undefined : id);
+        setCurrentConversationId(newConversationId);
+        currentConversationIdRef.current = newConversationId;
         setInputInfo('');
         setIsStreaming(false);
         setStreamingMessageId(null);

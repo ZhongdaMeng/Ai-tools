@@ -94,12 +94,6 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
                 });
                 setTotal(res.total);
 
-                const loadedIds = new Set(res.list.map(item => Number(item.id)));
-                for (const conversation of optimisticConversations) {
-                    if (loadedIds.has(conversation.id)) {
-                        removeOptimisticId(conversation.id);
-                    }
-                }
                 hasFetchedRef.current = true;
             })
             .catch(err => {
@@ -110,8 +104,20 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
             })
             .finally(() => {
                 setLoading(false);
-            });
-    }, [params, messageApi, isSearching, token, bootstrapped, fetchSeq, optimisticConversations, removeOptimisticId]);
+        });
+    }, [params, messageApi, isSearching, token, bootstrapped, fetchSeq]);
+
+    // 当 msgList 中已包含乐观会话时，清理乐观数据，避免重复条目
+    useEffect(() => {
+        if (optimisticConversations.length === 0) return;
+
+        const loadedIds = new Set(msgList.map(item => Number(item.id)));
+        for (const conversation of optimisticConversations) {
+            if (loadedIds.has(conversation.id)) {
+                removeOptimisticId(conversation.id);
+            }
+        }
+    }, [msgList, optimisticConversations, removeOptimisticId]);
 
     // 渲染列表
     const displayList = useMemo(() => {
