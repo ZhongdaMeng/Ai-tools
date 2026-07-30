@@ -108,7 +108,7 @@ export const streamChat = async (
     let fullContent = '';
     
     try {
-        const response = await fetch('/api/ai/chat', {
+        const response = await fetch(`${import.meta.env.VITE_APP_BASE_API}/ai/chat`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${token}`,
