@@ -5,7 +5,8 @@ import type {
     AxiosResponse
 } from 'axios';
 import type { ApiResponse } from '@/types/response';
-import { useUserStore } from '@/store';
+import { useUserStore } from '@/store/useUser';
+
 // import { redirect } from 'react-router-dom';
 
 // 创建axios实例，并配置默认参数
@@ -66,7 +67,7 @@ server.interceptors.response.use(
         }
 
         // 将错误继续抛出，以便在组件的 catch 中进行单独的业务处理
-        return Promise.reject(error.response.data);
+        return Promise.reject(error.response?.data ?? error);
     }
 );
 
@@ -74,11 +75,8 @@ server.interceptors.response.use(
 const handleBusinessError = (code: number, message: string) => {
     switch (code) {
         case 401:
-            console.warn('登录失效，即将跳转登录页');
-            // 清除Token
-            localStorage.removeItem('token');
-            useUserStore.getState().removeToken();
-            // redirect('/login');
+            console.warn('登录失效，清理用户信息与会话列表');
+            useUserStore.getState().clearSession();
             break;
         case 403:
             // alert('登录失败');

@@ -1,0 +1,341 @@
+.resume-info {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none; /* IE / Edge 旧版 */
+    scrollbar-width: none; /* Firefox */
+}
+.resume-info {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+    -ms-overflow-style: none; /* IE / Edge 旧版 */
+    scrollbar-width: none; /* Firefox */
+    padding: 32px 48px;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI',
+        'Noto Sans SC', Helvetica, Arial, sans-serif;
+    color: var(--custom-text-primary);
+    line-height: 1.6;
+
+    /* 顶部装饰条 */
+    .resume-accent-bar {
+        width: 64px;
+        height: 4px;
+        border-radius: 2px;
+        background: linear-gradient(90deg, #10a37f, #1a7f64);
+        margin-bottom: 28px;
+    }
+
+    /* 头部个人信息 */
+    .resume-header {
+        margin-bottom: 36px;
+
+        .resume-name {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0 0 6px 0;
+            color: var(--custom-text-primary);
+        }
+
+        .resume-title {
+            font-size: 15px;
+            color: var(--custom-text-secondary);
+            margin: 0 0 18px 0;
+            font-weight: 400;
+        }
+
+        .resume-contact {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            font-size: 14px;
+            color: var(--custom-text-secondary);
+
+            .contact-item {
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+
+                .contact-icon {
+                    font-size: 13px;
+                }
+            }
+
+            .copyable {
+                cursor: pointer;
+                transition: color var(--custom-transition-fast);
+
+                &:hover {
+                    color: #10a37f;
+                    font-weight: 500;
+                }
+            }
+
+            .contact-divider {
+                color: var(--custom-border-primary);
+                font-weight: 300;
+            }
+        }
+    }
+
+    /* 通用板块 */
+    .resume-section {
+        margin-bottom: 32px;
+
+        &:last-of-type {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--custom-text-primary);
+            margin: 0 0 16px 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--custom-border-secondary);
+            letter-spacing: 0.3px;
+        }
+
+        .section-content {
+            padding-left: 2px;
+        }
+    }
+
+    /* 列表样式 */
+    .intro-list,
+    .exp-list {
+        margin: 0;
+        padding-left: 18px;
+        list-style: none;
+
+        li {
+            position: relative;
+            font-size: 15px;
+            line-height: 1.75;
+            margin-bottom: 6px;
+            color: var(--custom-text-secondary);
+            padding-left: 12px;
+
+            &::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 9px;
+                width: 5px;
+                height: 5px;
+                border-radius: 50%;
+                background-color: #10a37f;
+                opacity: 0.7;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    /* 工作经验 */
+    .experience-item {
+        margin-bottom: 24px;
+        padding: 16px 18px;
+        background: var(--custom-bg-tertiary);
+        border-radius: var(--custom-radius-lg);
+        border: 1px solid var(--custom-border-secondary);
+        transition: box-shadow var(--custom-transition-fast);
+
+        &:hover {
+            box-shadow: var(--custom-shadow-sm);
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 4px;
+
+            .exp-company-info {
+                display: flex;
+                align-items: baseline;
+                gap: 6px;
+                flex-wrap: wrap;
+
+                .exp-sub {
+                    font-size: 14px;
+                    color: var(--custom-text-tertiary);
+                }
+            }
+
+            .exp-company {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0;
+                color: var(--custom-text-primary);
+            }
+
+            .exp-date {
+                font-size: 13px;
+                color: var(--custom-text-tertiary);
+                white-space: nowrap;
+                flex-shrink: 0;
+                padding-top: 2px;
+            }
+        }
+
+        .exp-role {
+            font-size: 14.5px;
+            color: #10a37f;
+            margin: 0 0 10px 0;
+            font-weight: 500;
+        }
+
+        .exp-list {
+            padding-left: 16px;
+
+            li {
+                &::before {
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+
+    /* 项目经验 */
+    .project-item {
+        margin-bottom: 24px;
+        padding: 16px 18px;
+        background: var(--custom-bg-tertiary);
+        border-radius: var(--custom-radius-lg);
+        border: 1px solid var(--custom-border-secondary);
+        transition: box-shadow var(--custom-transition-fast);
+
+        &:hover {
+            box-shadow: var(--custom-shadow-sm);
+        }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .proj-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+
+            .proj-name {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0;
+                color: var(--custom-text-primary);
+            }
+
+            .proj-badge {
+                font-size: 12px;
+                font-weight: 500;
+                padding: 2px 8px;
+                border-radius: 10px;
+                background: rgba(16, 163, 127, 0.1);
+                color: #10a37f;
+                line-height: 1.4;
+            }
+
+            .exp-date {
+                margin-left: auto;
+                font-size: 13px;
+                color: var(--custom-text-tertiary);
+                white-space: nowrap;
+            }
+        }
+
+        .proj-tech {
+            font-size: 14px;
+            color: var(--custom-text-tertiary);
+            margin: 0 0 10px 0;
+
+            .tech-label {
+                font-weight: 500;
+                color: var(--custom-text-secondary);
+            }
+        }
+
+        .exp-list {
+            padding-left: 16px;
+
+            li {
+                font-size: 14.5px;
+
+                &::before {
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+
+    /* 教育经历 */
+    .edu-item {
+        margin-bottom: 14px;
+        padding: 14px 18px;
+        background: var(--custom-bg-tertiary);
+        border-radius: var(--custom-radius-lg);
+        border: 1px solid var(--custom-border-secondary);
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .edu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+
+            .edu-school {
+                font-size: 16px;
+                font-weight: 600;
+                margin: 0;
+                color: var(--custom-text-primary);
+            }
+
+            .exp-date {
+                font-size: 13px;
+                color: var(--custom-text-tertiary);
+            }
+        }
+
+        .edu-detail {
+            font-size: 14.5px;
+            color: var(--custom-text-secondary);
+            margin: 0;
+        }
+    }
+
+    /* 暗色主题微调 */
+    [data-theme='dark'] & {
+        .resume-accent-bar {
+            background: linear-gradient(90deg, #10a37f, #0d8c6d);
+        }
+
+        .experience-item,
+        .project-item,
+        .edu-item {
+            background: var(--custom-bg-secondary);
+
+            &:hover {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        .project-item .proj-badge {
+            background: rgba(16, 163, 127, 0.15);
+        }
+    }
+}

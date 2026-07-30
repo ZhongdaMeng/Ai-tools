@@ -5,6 +5,7 @@ import SiderHeader from '@/components/SiderHeader/Index';
 import SiderFooter from '@/components/SiderFooter/Index';
 import SiderContent from '@/components/SiderContent/Index';
 import { useConversationStore } from '@/store';
+import { useUserStore } from '@/store/useUser';
 import './home.scss';
 
 const { Sider } = Layout;
@@ -13,6 +14,7 @@ export const Home = () => {
     const navigate = useNavigate();
     const [collapsed, setCollapsed] = useState(false);
     const conversationStore = useConversationStore();
+    const bootstrapUserSession = useUserStore(state => state.bootstrapUserSession);
     const closeSider = () => {
         setCollapsed(!collapsed);
     };
@@ -44,6 +46,12 @@ export const Home = () => {
         }
     };
     useEffect(() => {
+        // 浏览器打开时：先拉取最新用户信息（内部会根据 token 决定是否请求）
+        bootstrapUserSession();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
         // 浏览器刷新或首次进入时，统一重置到新聊天页面
         const pathname = window.location.pathname;
         if (pathname === '/' || (pathname.startsWith('/chat/') && pathname !== '/chat/newchat')) {
@@ -51,6 +59,7 @@ export const Home = () => {
             conversationStore.setSelectedId(Number.isNaN(id) ? null : id);
             navigate('/chat/newchat', { replace: true });
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- conversationStore 整体引用不宜加入依赖，否则会无限触发
     }, [navigate]);
     return (
         <div className="home-main">

@@ -5,7 +5,8 @@ import type { MenuProps } from 'antd';
 import { EllipsisOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getMsgList, renameConversation, deleteConversation } from '@/api/ai';
 import type { GetMsgListParams, GetMsgListItem } from '@/api/ai';
-import { useConversationStore, useUserStore } from '@/store';
+import { useConversationStore } from '@/store';
+import { useUserStore } from '@/store/useUser';
 import './index.scss';
 
 interface Props {
@@ -20,6 +21,8 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
     const [messageApi, contextHolder] = message.useMessage();
     const loadMoreRef = useRef<HTMLDivElement | null>(null);
     const token = useUserStore(state => state.token);
+    const bootstrapped = useUserStore(state => state.bootstrapped);
+    const hasFetchedRef = useRef(false);
     const selectedId = useConversationStore(state => state.selectedId);
     const setSelectedId = useConversationStore(state => state.setSelectedId);
     const optimisticConversations = useConversationStore(state => state.optimisticConversations);
@@ -31,6 +34,8 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
     const [total, setTotal] = useState<number>(0);
     const [msgList, setMsgList] = useState<GetMsgListItem[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    // 用于显式触发“需要拉取第一页”的 effect，避免因 params 未变化导致 effect 不执行
+    const [fetchSeq, setFetchSeq] = useState(0);
 
     // 是否处于搜索模式
     const isSearching = searchResults !== null;
@@ -48,13 +53,30 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
     useEffect(() => {
         setMsgList([]);
         setTotal(0);
-        setParams({ page: 1, pageSize: 20 });
-        setLoading(!!token);
-    }, [token]);
+        if (!token) {
+            setLoading(false);
+            hasFetchedRef.current = false;
+            return;
+        }
+
+        if (!bootstrapped) {
+            // token 存在但启动校验尚未完成：先展示 loading，避免抢先拉取会话列表
+            setLoading(true);
+            return;
+        }
+
+        // 校验完成后，有 token 且尚未拉取过：触发第一页加载
+        if (!hasFetchedRef.current) {
+            setLoading(true);
+            setParams({ page: 1, pageSize: 20 });
+            // 显式触发一次拉取，防止 params 未变化导致普通列表 effect 不执行
+            setFetchSeq(prev => prev + 1);
+        }
+    }, [token, bootstrapped]);
 
     // 普通列表加载
     useEffect(() => {
-        if (isSearching || !token) return;
+        if (isSearching || !token || !bootstrapped) return;
 
         getMsgList(params)
             .then(res => {
@@ -78,6 +100,7 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
                         removeOptimisticId(conversation.id);
                     }
                 }
+                hasFetchedRef.current = true;
             })
             .catch(err => {
                 messageApi.open({
@@ -85,8 +108,10 @@ const Messages = ({ searchResults, searchTotal, searchLoading, onLoadMoreSearch 
                     content: err.message
                 });
             })
-            .finally(() => setLoading(false));
-    }, [params, messageApi, isSearching]);
+            .finally(() => {
+                setLoading(false);
+            });
+    }, [params, messageApi, isSearching, token, bootstrapped, fetchSeq, optimisticConversations, removeOptimisticId]);
 
     // 渲染列表
     const displayList = useMemo(() => {
