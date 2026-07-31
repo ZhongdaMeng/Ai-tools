@@ -30,10 +30,11 @@ const MODEL_OPTIONS: MenuProps['items'] = [
 interface PropsType {
     canSend: boolean;
     inputToolsClick: () => void;
+    allowModelSelect: boolean;
 }
 
 const InputTools = (props: PropsType) => {
-    const { canSend, inputToolsClick } = props;
+    const { canSend, inputToolsClick, allowModelSelect } = props;
     const { model, setModel, setUseInterNet } = useModelStore();
 
     const [activeGOl, setAactiveGOl] = useState<boolean>(false);
@@ -102,10 +103,12 @@ const InputTools = (props: PropsType) => {
                         selectedKeys: [model],
                     }}
                     trigger={['click']}
+                    disabled={!allowModelSelect}
                 >
                     <Button
                         autoInsertSpace={false}
                         type="text"
+                        disabled={!allowModelSelect}
                         className="model-select-btn"
                     >
                         <span className="icon-size">{model || 'Auto'}</span>
