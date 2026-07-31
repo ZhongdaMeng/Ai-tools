@@ -31,16 +31,20 @@ interface PropsType {
     canSend: boolean;
     inputToolsClick: () => void;
     allowModelSelect: boolean;
+    /** 历史会话实际使用的模型，锁定时显示此值而非全局 store */
+    displayModel?: string;
 }
 
 const InputTools = (props: PropsType) => {
-    const { canSend, inputToolsClick, allowModelSelect } = props;
+    const { canSend, inputToolsClick, allowModelSelect, displayModel } = props;
     const { model, setModel, setUseInterNet } = useModelStore();
 
+    // 锁定时使用会话实际模型判断网络按钮状态
+    const effectiveModel = allowModelSelect ? model : (displayModel ?? model);
     const [activeGOl, setAactiveGOl] = useState<boolean>(false);
     const disabledGOl = useMemo(() => {
-        return model === 'Gemma 4' ? true : false;
-    }, [model]);
+        return effectiveModel === 'Gemma 4' ? true : false;
+    }, [effectiveModel]);
     const disabledSend = useMemo(() => {
         return !canSend;
     }, [canSend]);
@@ -111,7 +115,7 @@ const InputTools = (props: PropsType) => {
                         disabled={!allowModelSelect}
                         className="model-select-btn"
                     >
-                        <span className="icon-size">{model || 'Auto'}</span>
+                        <span className="icon-size">{(allowModelSelect ? model : displayModel) || model || 'Auto'}</span>
                         <DownOutlined style={{ fontSize: '10px', marginLeft: '4px' }} />
                     </Button>
                 </Dropdown>
