@@ -238,6 +238,7 @@ export const HomeContent = () => {
                     <InputTools
                         canSend={inputInfo.length > 0 && !isStreaming}
                         inputToolsClick={sendMsg}
+                        allowModelSelect={id === 'newchat' && !currentConversationId}
                     />
                 </div>
             </div>
