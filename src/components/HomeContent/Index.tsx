@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { useMemo } from 'react';
 import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 import { message } from 'antd';
 import { getMsgDetail, streamChat } from '@/api/ai.ts';
@@ -35,6 +36,12 @@ export const HomeContent = () => {
     const [streamingContent, setStreamingContent] = useState<string>('');
     const [isStreaming, setIsStreaming] = useState<boolean>(false);
     const cancelStreamRef = useRef<(() => void) | null>(null);
+
+    // 从消息列表中获取该会话实际使用的模型（历史会话时锁定显示）
+    const conversationModel = useMemo(() => {
+        const aiMsg = msgList.find(m => m.role === 'assistant' && m.model);
+        return aiMsg?.model ?? undefined;
+    }, [msgList]);
 
     const sendMsg = async () => {
         if (!inputInfo.trim() || isStreaming) return;
@@ -239,6 +246,7 @@ export const HomeContent = () => {
                         canSend={inputInfo.length > 0 && !isStreaming}
                         inputToolsClick={sendMsg}
                         allowModelSelect={id === 'newchat' && !currentConversationId}
+                        displayModel={conversationModel}
                     />
                 </div>
             </div>
