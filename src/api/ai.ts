@@ -1,4 +1,5 @@
 import http from '@/utils/request';
+import { useUserStore } from '@/store';
 
 export interface GetMsgListParams {
     page: number;
@@ -91,6 +92,8 @@ const PROVIDER_MAPPING: Record<string, 'mimo' | 'local'> = {
     'mimo-v2.5': 'mimo',
 };
 
+const API_BASE = import.meta.env.VITE_APP_BASE_API as string;
+
 export const streamChat = async (
     message: string,
     token: string,
@@ -108,10 +111,13 @@ export const streamChat = async (
     let fullContent = '';
     
     try {
-        const response = await fetch(`${import.meta.env.VITE_APP_BASE_API}/ai/chat`, {
+        const resolvedToken =
+            token || useUserStore.getState().token || localStorage.getItem('token');
+
+        const response = await fetch(`${API_BASE}/ai/chat`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${token}`,
+                ...(resolvedToken ? { Authorization: `Bearer ${resolvedToken}` } : {}),
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
