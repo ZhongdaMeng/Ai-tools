@@ -81,8 +81,6 @@
         border-collapse: collapse;
         margin: 16px 0;
         width: 100%;
-        overflow-x: auto;
-        display: block;
     }
     
     th, td {
@@ -251,7 +249,8 @@
     margin: 16px 0;
     
     table {
-        min-width: 100%;
+        width: 100%;
+        table-layout: fixed;
         border-collapse: collapse;
         border: 1px solid #e5e7eb;
         border-radius: 8px;
