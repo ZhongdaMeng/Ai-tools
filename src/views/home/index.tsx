@@ -55,8 +55,7 @@ export const Home = () => {
         // 浏览器刷新或首次进入时，统一重置到新聊天页面
         const pathname = window.location.pathname;
         if (pathname === '/' || (pathname.startsWith('/chat/') && pathname !== '/chat/newchat')) {
-            const id = Number(pathname.split('/')[2]);
-            conversationStore.setSelectedId(Number.isNaN(id) ? null : id);
+            conversationStore.setSelectedId(null);
             navigate('/chat/newchat', { replace: true });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps -- conversationStore 整体引用不宜加入依赖，否则会无限触发
